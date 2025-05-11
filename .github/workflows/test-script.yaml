@@ -1,0 +1,25 @@
+name: "Bot notify ronin pricing"
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - uses: shogo82148/actions-setup-redis@v1
+      with:
+        auto-start: "false"
+    - run: ./jobs/ronin-notify.sh
+    env:
+      TELEGRAM_CHAT_ID: '251602273' # Anh DAP CHAI TEST
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      REDIS_ADDR: ${{ secrets.REDIS_ADDR }}
+      NOTIFY_PERCENT: '0.0'
+      LAST_PRICE_KEY: 'ronin:price:bot:last'
+      OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
