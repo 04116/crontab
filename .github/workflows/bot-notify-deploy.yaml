@@ -1,0 +1,20 @@
+name: "Slack notify deployment task on time"
+on:
+  workflow_dispatch:
+
+  # this one should be update from slackbot, via api
+  schedule:
+    - cron: "0 2 * * 1-5" # 2:00 UTC to UTC+7 = 9:00
+
+jobs:
+  notify-ronin-at-time-gfbaby:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: shogo82148/actions-setup-redis@v1
+        with:
+          auto-start: "false"
+      - run: ./jobs/slack-notify-deploy.sh
+    env:
+      SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+      SLACK_CHANNEL: C08RQNE829K #test-bot
